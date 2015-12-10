@@ -3,8 +3,9 @@
 from urllib2 import urlopen,Request
 from scrapy import Selector
 import requests, json
-import random, socket
+import random, socket, os
 import unirest
+from requests.auth import HTTPProxyAuth
 
 user_agent_list = [\
     'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31',\
@@ -36,22 +37,51 @@ user_agent_list = [\
     'Chrome/19.0.1084.54 Safari/536.5'
 ]
 
+
+def getSelPagebyUrlProxy(url):
+    # url = "https://www.amazon.cn"
+    headers = {}
+    proxy_host = "proxy.crawlera.com"
+    crawlerakey = os.environ.get("CRAWLERAKEY")
+    proxy_auth = HTTPProxyAuth(crawlerakey, "")
+    proxies = {"http": "http://{}:8010/".format(proxy_host)}
+
+    if url.startswith("https:"):
+        url = "http://" + url[8:]
+        headers["X-Crawlera-Use-HTTPS"] = "1"
+
+    req    = requests.get(url, headers=headers, proxies=proxies, auth=proxy_auth)
+    page   = req.text
+    status = req.status_code
+    sel    = Selector(text=page)
+
+    return sel, page, url, status
+
+
+def getSelPagebyUrl(url):
+
+    request_headers = { 'User-Agent': random.choice(user_agent_list) }
+    request = Request(url, None, request_headers)
+    req = urlopen(request, timeout=60)
+    page = req.read()
+    status = req.getcode()
+    sel = Selector(text=page)
+    return sel, page, url, status
+
+
 def getASIN(isbn):
+
     url = 'http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=' + isbn
-    try:
-        req = requests.get(url)
-        sel = Selector(text=req.text)
-    except:
-	request_headers = { 'User-Agent': random.choice(user_agent_list) }
-        request = Request(url, None, request_headers)
-        req = urlopen(request, timeout=60)
-        sel = Selector(text=req.read())
+    sel, page, url, status = getSelPagebyUrl(url)
+    if (status!=200):
+        sel, page, url, status = getSelPagebyUrlProxy(url)
+        #print 'proxy...'
 
     res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
     if (res != []):
         return res[0]
     else:
-	return ''
+        return ''
 
 def test(isbn):
     if (isbn!='') and (type(isbn)==str):
@@ -70,22 +100,23 @@ if (__name__=='__main__'):
     #print len(isbns), isbns[-1]
 
     step = 10
-    subisbnindexs = [ isbns[i:i+step]  for i in range(50000,len(isbns),step) ]    
-    
+    subisbnindexs = [ isbns[i:i+step]  for i in range(50000,len(isbns),step) ]
+
     #print len(subisbnindexs), subisbnindexs[-1][-1]
     #sumlen = 0
     #for sub in subisbnindexs:
     #	sumlen += len(sub)
     #print sumlen
-    
+    #print 'Prepare work done......'
+
     baseurl = 'http://www.amazon.cn/dp/'
     i = 0
     for sub in subisbnindexs:
-    	# list
-	unvisitedurllist = []
-	#cnt = 0
-	for isbn in sub:
-	    asin = getASIN(isbn)
+    	#!<list--one
+    	unvisitedurllist = []
+    	#cnt = 0
+    	for isbn in sub:
+    	    asin = getASIN(isbn)
             if (asin != ''):
 	            url = baseurl + asin
 	            d = {}
@@ -94,22 +125,24 @@ if (__name__=='__main__'):
 	            d['isbn'] = isbn
 	            d['asin'] = asin
 	            unvisitedurllist.append(d)
-            #cnt += 1
-	    #if (cnt%20==0):
-	    #    time.sleep(2)
-	# dict
+                #cnt += 1
+    	    #if (cnt%20==0):
+    	    #    time.sleep(2)
+        #!<dict--two
         unvisitedurldict = {}
         unvisitedurldict['urls'] = unvisitedurllist
-        # put
+        #!<put--three
         unirest.timeout(180)
         res = unirest.put(
-		"http://192.168.100.3:5000/unvisitedurls",
-		headers={"Accept":"application/json", "Content-Type":"application/json"},
-		params=json.dumps(unvisitedurldict)
-		)
-	print 'sub: ',step, '--', i, 'Done!'
-	i += 1
-
+                        "http://192.168.100.3:5000/unvisitedurls",
+                        headers={"Accept":"application/json", "Content-Type":"application/json"},
+                        params=json.dumps(unvisitedurldict)
+                        )
+        print 'sub: ',step, '--', i, 'Done!'
+        i += 1
+        if (i==3):
+            break
+    print 'Test done for crawlera!'
     #with open('./amazonurl.json', 'wb') as fo:
     #	json.dump(unvisitedurldict, fo)
     #fo.close()
