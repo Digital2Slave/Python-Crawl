@@ -1,7 +1,6 @@
 #!/usr/local/bin/python
 #-*- encoding:utf-8 -*-
 import re
-from scrapy.selector import Selector
 from collections import OrderedDict
 from isbn2asin import getSelPagebyUrl, getSelPagebyUrlProxy, getASIN
 
@@ -200,3 +199,14 @@ def parse(isbn):
     orderdict[u'书籍链接'] = bookurl
 
     return orderdict
+
+def test(isbn):
+    if (isbn!='') and (type(isbn)==str):
+        bookdict = parse(isbn)
+        for (k,v) in bookdict.items():
+            print k, v
+
+if (__name__=='__main__'):
+    # Test done.
+    isbn = '9787561335321'
+    test(isbn)

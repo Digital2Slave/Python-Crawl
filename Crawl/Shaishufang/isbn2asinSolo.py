@@ -94,8 +94,8 @@ if (__name__=='__main__'):
     #test(isbn)
     isbns = []
     with file('./shaishufang.isbns.txt', 'rb') as fi:
-         for line in fi.readlines():
-             isbns.append(line.strip())
+        for line in fi.readlines():
+            isbns.append(line.strip())
     fi.close()
     #print len(isbns), isbns[-1]
 
@@ -118,13 +118,13 @@ if (__name__=='__main__'):
     	for isbn in sub:
     	    asin = getASIN(isbn)
             if (asin != ''):
-	            url = baseurl + asin
-	            d = {}
-	            d['spider'] = 'ShaishufangAmazon'
-	            d['url'] = url
-	            d['isbn'] = isbn
-	            d['asin'] = asin
-	            unvisitedurllist.append(d)
+                url = baseurl + asin
+                d = {}
+                d['spider'] = 'ShaishufangAmazon'
+                d['url'] = url
+                d['isbn'] = isbn
+                d['asin'] = asin
+                unvisitedurllist.append(d)
                 #cnt += 1
     	    #if (cnt%20==0):
     	    #    time.sleep(2)
