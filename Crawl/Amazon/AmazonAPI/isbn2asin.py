@@ -71,14 +71,15 @@ def getASIN(isbn):
     """ get book asin. """
     url = 'http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=' + isbn
     sel, page, url, status = getSelPagebyUrl(url)
-    if (status!=200):
-        sel, page, url, status = getSelPagebyUrlProxy(url)
-        #print 'proxy...'
-
     res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
     if (res != []):
         return res[0]
     else:
+        sel, page, url, status = getSelPagebyUrlProxy(url)
+        #print 'proxy...'
+        res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
+        if (res != []):
+            return res[0]
         return ''
 
 def test(isbn):
