@@ -1,13 +1,9 @@
 #!/usr/local/bin/python
 #-*- encoding:utf-8 -*-
+import re
 from scrapy.selector import Selector
 from collections import OrderedDict
-
-from urllib2 import urlopen, Request
-from isbn2asin import user_agent_list, getASIN
-import requests, socket, random
-
-import re, json, unirest
+from isbn2asin import getSelPagebyUrl, getSelPagebyUrlProxy, getASIN
 
 def checkXpathResult(rlist):
     if rlist != []:
@@ -15,49 +11,23 @@ def checkXpathResult(rlist):
     else:
         return []
 
-def getSelPagebyUrl(url):
-    cnt = 0
-    try:
-        req = requests.get(url)
-        page = req.text
-        sel = Selector(text=page)
-        bookurl  = req.url
-        urlstate = req.status_code
-    except:
-	request_headers = { 'User-Agent': random.choice(user_agent_list) }
-        request = Request(url, None, request_headers)
-        req = urlopen(request, timeout=60)
-        page = req.read()
-        sel = Selector(text=page)
-        bookurl  = req.url
-        urlstate = req.getcode()
+def parse(isbn):
+    #!!< asin !!!
+    asin = getASIN(isbn)
+    if (asin == ''):
+        return {'isbn':isbn}
+
+    #!!< bookurl !!!
+    url = 'http://www.amazon.cn/dp/' + asin
+    sel, page, bookurl, urlstate = getSelPagebyUrl(url)
 
     if (urlstate<200) or (urlstate>=400):
-        cnt += 1
-	if (cnt<3):
-	    return getSelPagebyUrl(url)
-	else:
-	    return sel, page, bookurl, urlstate  
-    else:
-	return sel, page, bookurl, urlstate
-
-
-def parse(isbn):
-    #!!< asin
-    asin = getASIN(isbn)
-    #print isbn, '-->', asin	
-    if (asin == ''):
-	return {'isbn':isbn}
-
-    #!!< bookurl
-    url = 'http://www.amazon.cn/dp/' + asin
-    
-    sel, page, bookurl, urlstate = getSelPagebyUrl(url)
+        sel, page, bookurl, urlstate = getSelPagebyUrlProxy(url)
 
     if (urlstate<200) or (urlstate>=400):
         return {'url':bookurl, 'isbn':isbn, 'asin':asin}
 
-    #书籍信息字典
+    #!!< 书籍信息字典 !!!
     orderdict = OrderedDict()
     #!< 书名
     name = ''
@@ -230,4 +200,3 @@ def parse(isbn):
     orderdict[u'书籍链接'] = bookurl
 
     return orderdict
-    
