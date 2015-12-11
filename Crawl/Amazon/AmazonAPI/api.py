@@ -15,6 +15,4 @@ def get():
 
 if __name__ == '__main__':
     #app.run(debug=True) # Defalut 127.0.0.1:5000
-    while True:
-	app.run(debug=False,host='192.168.100.3', port=5001)
-
+    app.run(debug=False,host='192.168.100.3', port=5001)
