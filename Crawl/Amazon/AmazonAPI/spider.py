@@ -21,9 +21,6 @@ def parse(isbn):
     sel, page, bookurl, urlstate = getSelPagebyUrl(url)
 
     if (urlstate<200) or (urlstate>=400):
-        sel, page, bookurl, urlstate = getSelPagebyUrlProxy(url)
-
-    if (urlstate<200) or (urlstate>=400):
         return {'url':bookurl, 'isbn':isbn, 'asin':asin}
 
     #!!< 书籍信息字典 !!!

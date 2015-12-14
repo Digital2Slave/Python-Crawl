@@ -1,13 +1,13 @@
 # -*- coding:utf-8 -*-
 import unirest, json, time, socket
 from collections import OrderedDict
-from multiprocessing import Pool
 
 def PutData(isbnurls):
     """ data """
     spidername = 'ShaishufangAmazon'
     cnt = 0
     for url in isbnurls:
+        print cnt, '-->', url
         cnt += 1
         unirest.timeout(180)
         response = unirest.get(url, headers={"Accept":"application/json"}) # handle url = baseurl + isbn
@@ -27,28 +27,17 @@ def PutData(isbnurls):
                          )
         except:
             pass
-        if ((cnt%300)==0):
+        if ((cnt%80)==0):
             time.sleep(3)
 
 
 if __name__ == '__main__':
     baseurl = 'http://192.168.100.3:5001/book?isbn='
+    #baseurl = 'http://192.168.31.187:5001/book?isbn='
     isbnurls = []
     with file('./shaishufang.isbns.txt', 'rb') as fi:
         for line in fi.readlines():
             isbnurls.append(baseurl + line.strip())
     fi.close()
 
-    PutData(isbnurls[49304:])
-
-    """
-    testurl = isbnurls[:10]
-
-    t1 = time.time()
-    pool = Pool()
-    pool.map(PutData, testurl)
-    pool.close()
-    pool.join()
-    t2 = time.time()
-    print (t1-t2)
-    """
+    PutData(isbnurls[81332:])
