@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import unirest, json, time, socket
+import unirest, json, time
 from collections import OrderedDict
 
 def PutData(isbnurls):
