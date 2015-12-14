@@ -7,7 +7,7 @@ def PutData(isbnurls):
     spidername = 'ShaishufangAmazon'
     cnt = 0
     for url in isbnurls:
-        print cnt, '-->', url
+        #print cnt, '-->', url
         cnt += 1
         unirest.timeout(180)
         response = unirest.get(url, headers={"Accept":"application/json"}) # handle url = baseurl + isbn
