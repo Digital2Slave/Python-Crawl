@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 BOT_NAME = 'amazon'
 SPIDER_MODULES = ['amazon.spiders']
@@ -54,7 +55,7 @@ USER_AGENT  = ''
 
 #!< http://scrapinghub.com/crawlera/
 CRAWLERA_ENABLED = True
-#CRAWLERA_USER = '***'     # add your CRAWLERA_USER string value !!!
+CRAWLERA_USER = os.environ.get("CRAWLERAKEY") # add your CRAWLERA_USER string value !!!
 CRAWLERA_PASS = ''
 AUTOTHROTTLE_ENABLED = False
 
