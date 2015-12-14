@@ -30,14 +30,15 @@ def PutData(isbnurls):
         if ((cnt%80)==0):
             time.sleep(3)
 
-
 if __name__ == '__main__':
-    baseurl = 'http://192.168.100.3:5001/book?isbn='
-    #baseurl = 'http://192.168.31.187:5001/book?isbn='
+    baseurl = 'http://192.168.100.3:5001/book?isbn='    # server
+    #baseurl = 'http://192.168.31.187:5001/book?isbn='   # home-703
+    #baseurl = 'http://192.168.1.48:5001/book?isbn='      # kids-5G
     isbnurls = []
     with file('./shaishufang.isbns.txt', 'rb') as fi:
         for line in fi.readlines():
             isbnurls.append(baseurl + line.strip())
     fi.close()
 
-    PutData(isbnurls[81332:])
+    #
+    PutData(isbnurls[99601:-6000])
