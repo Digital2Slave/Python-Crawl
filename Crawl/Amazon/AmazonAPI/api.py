@@ -16,10 +16,6 @@ def get():
 if __name__ == '__main__':
     #app.run(debug=True) # Defalut 127.0.0.1:5000
     #app.run(debug=False,host='192.168.1.156', port=5001)  # mac-mini
-<<<<<<< Updated upstream
-    #app.run(debug=False,host='192.168.100.3', port=5001)  # server
-=======
     app.run(debug=False,host='192.168.100.3', port=5001)  # server
->>>>>>> Stashed changes
     #app.run(debug=False,host='192.168.31.187', port=5001) # home-703
-    app.run(debug=False,host='192.168.1.124', port=5001)    # kids-5G
+    #app.run(debug=False,host='192.168.1.124', port=5001)    # kids-5G
