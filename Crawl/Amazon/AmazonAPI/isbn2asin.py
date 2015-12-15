@@ -4,6 +4,9 @@ import random, os, json
 from scrapy import Selector
 from urllib2 import urlopen,Request
 from requests.auth import HTTPProxyAuth
+import sys, time
+sys.setrecursionlimit(250)
+
 
 #http://www.useragentstring.com/pages/useragentstring.php
 browerfile = file('./UserAgentString.json', 'rb')
@@ -38,28 +41,32 @@ def getSelPagebyUrl(url):
     """ get url's sel, page, url, request status."""
     request_headers = { 'User-Agent': random.choice(user_agent_list) }
     request = Request(url, None, request_headers)
-    req = urlopen(request, timeout=60)
-    page = req.read()
-    status = req.getcode()
-    sel = Selector(text=page)
-    return sel, page, url, status
+    if (request!=None):
+        req = urlopen(request, timeout=60)
+        page = req.read()
+        status = req.getcode()
+        sel = Selector(text=page)
+        return sel, page, url, status
+    else:
+        return getSelPagebyUrl(url)
 
 
 def getASIN(isbn):
-    """ get book asin. """
     url = 'http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=' + isbn
     sel, page, url, status = getSelPagebyUrl(url)
-    res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
-    if (res != []):
-        return res[0]
-    else:
+
+    nores = sel.xpath('//h1[@id="noResultsTitle"]/text()').extract()
+    if nores:
+        #print nores[0] #没有找到任何与
         return ''
-    	# sel, page, url, status = getSelPagebyUrlProxy(url)
-    	# res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
-    	# if (res != []):
-        #     return res[0]
-    	# else:
-        #     return ''
+    else:
+        res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
+        if res:
+            return res[0]
+        else:
+            time.sleep(1)
+            return getASIN(isbn)
+
 
 def test(isbn):
     if (isbn!='') and (type(isbn)==str):
