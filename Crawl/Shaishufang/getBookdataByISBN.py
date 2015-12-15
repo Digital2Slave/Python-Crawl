@@ -31,8 +31,8 @@ def PutData(isbnurls):
             time.sleep(3)
 
 if __name__ == '__main__':
-    baseurl = 'http://192.168.1.156:5001/book?isbn='    # mac-mini
-    #baseurl = 'http://192.168.100.3:5001/book?isbn='    # server
+    #baseurl = 'http://192.168.1.156:5001/book?isbn='    # mac-mini
+    baseurl = 'http://192.168.100.3:5001/book?isbn='    # server
     #baseurl = 'http://192.168.31.187:5001/book?isbn='   # home-703
     #baseurl = 'http://192.168.1.48:5001/book?isbn='      # kids-5G
     isbnurls = []
@@ -41,5 +41,5 @@ if __name__ == '__main__':
             isbnurls.append(baseurl + line.strip())
     fi.close()
 
-    #105609
-    PutData(isbnurls[-10000:-6000])
+    #105634
+    PutData(isbnurls[105634:-20000])
