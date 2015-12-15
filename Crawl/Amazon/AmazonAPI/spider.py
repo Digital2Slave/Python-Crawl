@@ -120,8 +120,8 @@ def parse(isbn):
     detailValue = []
     for vt in detailValueTmp:
         vt = vt.strip('\n >')
-        if (vt != '') and (vt != u'\xa0'):
-            detailValue.append(vt)
+        #if (vt != '') and (vt != u'\xa0'):
+        detailValue.append(vt)
     Value = detailValue[:len(Name)]
 
     Num = len(Name)
