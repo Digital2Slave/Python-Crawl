@@ -41,5 +41,6 @@ if __name__ == '__main__':
             isbnurls.append(baseurl + line.strip())
     fi.close()
 
-    #dst = count() - 105634 - 10000 - 4000
-    #PutData(isbnurls[dst:-20000])
+    #addvalue = 141277 - 105634 - 10000 - 4000
+    #startpoint = 141277 - 10000 - 4000
+    PutData(isbnurls[127277:150000])
