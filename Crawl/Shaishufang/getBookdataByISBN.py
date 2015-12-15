@@ -40,5 +40,5 @@ if __name__ == '__main__':
             isbnurls.append(baseurl + line.strip())
     fi.close()
 
-    #105601 
-    PutData(isbnurls[99601:-6000])
+    #105609
+    PutData(isbnurls[99609:-6000])
