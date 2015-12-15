@@ -48,6 +48,7 @@ def getSelPagebyUrl(url):
         sel = Selector(text=page)
         return sel, page, url, status
     else:
+        time.sleep(1)
         return getSelPagebyUrl(url)
 
 
