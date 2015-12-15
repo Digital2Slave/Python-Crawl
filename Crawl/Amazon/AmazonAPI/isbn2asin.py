@@ -53,12 +53,13 @@ def getASIN(isbn):
     if (res != []):
         return res[0]
     else:
-    	sel, page, url, status = getSelPagebyUrlProxy(url)
-    	res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
-    	if (res != []):
-            return res[0]
-    	else:
-            return ''
+        return ''
+    	# sel, page, url, status = getSelPagebyUrlProxy(url)
+    	# res = sel.xpath('//li[@id="result_0"]/@data-asin').extract()
+    	# if (res != []):
+        #     return res[0]
+    	# else:
+        #     return ''
 
 def test(isbn):
     if (isbn!='') and (type(isbn)==str):
