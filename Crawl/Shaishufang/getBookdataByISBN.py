@@ -43,4 +43,6 @@ if __name__ == '__main__':
 
     #addvalue = 141277 - 105634 - 10000 - 4000
     #startpoint = 141277 - 10000 - 4000
-    PutData(isbnurls[127277:150000])
+    #startpoint = 150000
+    #lastendpoint = -20000
+    PutData(isbnurls[150000:190000])
