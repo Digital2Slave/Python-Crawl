@@ -44,6 +44,10 @@ if __name__ == '__main__':
     #server
     #PutData(isbnurls[150000:190000])
     #PutData(isbnurls[190000:230000])
-    PutData(isbnurls[270000:670000])
+    #PutData(isbnurls[270000:670000])	# NOT DONE.
+
+    #388726 - 21724 = 367002 		# 2015.12.28
+    PutData(isbnurls[367002:670000])	
+
     #mac-mini [-20000+(-1724):-20000]
     #PutData(isbnurls[230000:270000])
