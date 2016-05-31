@@ -2,4 +2,4 @@
 
 ## Abstract
 
-This is a root dir for Computer Vision, Data, Crawl by use of Python language.
+This is a root dir for Crawl by use of Python language.
